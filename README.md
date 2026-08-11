@@ -31,13 +31,13 @@ A fully-featured, real-time collaborative whiteboard application inspired by too
 
 ## 🚀 Tech Stack
 
-### Frontend (`/my-app`)
+### Frontend (`/frontend`)
 - **React 19** & **Vite**: Ultra-fast development and rendering.
 - **Redux Toolkit**: Predictable state management handling board elements, UI tools, and interaction history (Undo/Redo).
 - **HTML5 Canvas API**: High-performance custom rendering loop for all shapes and drawings.
 - **Socket.io-client**: For seamless, low-latency real-time communication.
 
-### Backend (`/my-app-server`)
+### Backend (`/backend`)
 - **Node.js** & **Express**: Robust and scalable API architecture.
 - **Socket.io**: Real-time bidirectional event-based communication.
 - **MongoDB (Mongoose)**: Document database for persistent storage of boards, elements, and user data.
@@ -56,11 +56,11 @@ cd whiteboard
 
 ### 2. Backend Setup
 ```bash
-cd my-app-server
+cd backend
 npm install
 ```
 
-Create a `.env` file in the `my-app-server` directory with the following variables:
+Create a `.env` file in the `backend` directory with the following variables:
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/whiteboard
@@ -78,7 +78,7 @@ npm run dev
 ### 3. Frontend Setup
 Open a new terminal window:
 ```bash
-cd my-app
+cd frontend
 npm install
 ```
 
