@@ -11,7 +11,7 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     // TEST: socket connection auth check temporarily bypassed
     if (!socketRef.current) {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000').replace(/\/+$/, '');
       socketRef.current = io(backendUrl, {
         withCredentials: true,
         transports: ['websocket'],

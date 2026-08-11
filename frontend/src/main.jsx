@@ -10,7 +10,7 @@ import App from './App.jsx';
 import './index.css';
 
 if (import.meta.env.VITE_BACKEND_URL) {
-  axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+  axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, '');
 }
 axios.defaults.withCredentials = true;
 
