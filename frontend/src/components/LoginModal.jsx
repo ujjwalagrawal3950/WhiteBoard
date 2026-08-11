@@ -21,7 +21,8 @@ export default function LoginModal({ trigger, onClose }) {
     // then redirects to /dashboard. We store the current board URL so we can
     // redirect back after login.
     sessionStorage.setItem('redirect_after_login', window.location.pathname);
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+    window.location.href = `${backendUrl}/api/auth/google`;
   };
 
   const featureLabel = trigger === 'download' ? 'download your board' : 'share this board';
