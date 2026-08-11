@@ -17,6 +17,7 @@ import librariesRouter from './src/routes/libraries.js';
 import { initSocket } from './src/socket/index.js';
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
 // ─── CORS ──────────────────────────────────────────────────────────────────────
