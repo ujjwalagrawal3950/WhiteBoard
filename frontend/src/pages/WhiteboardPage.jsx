@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { loadElements, clearBoard } from '../store/boardSlice';
+import { loadElements, clearBoard, addComment, deleteComment } from '../store/boardSlice';
 import { useSocket } from '../context/SocketContext';
 import Toolbar from '../components/Toolbar';
 import Canvas from '../components/Canvas';
@@ -134,6 +134,23 @@ export default function WhiteboardPage() {
     setSaveState(SAVE_STATES.unsaved);
     debouncedSave(elements, comments);
   }, [elements, comments, accessState, debouncedSave]);
+
+  // ─── Sync Comments via Socket ────────────────────────────────────────────────
+  useEffect(() => {
+    const socket = socketRef?.current;
+    if (!socket || accessState !== 'granted') return;
+
+    const onCommentUpdate = (comment) => dispatch(addComment(comment));
+    const onCommentDelete = ({ commentId }) => dispatch(deleteComment(commentId));
+
+    socket.on('comment-update', onCommentUpdate);
+    socket.on('comment-delete', onCommentDelete);
+
+    return () => {
+      socket.off('comment-update', onCommentUpdate);
+      socket.off('comment-delete', onCommentDelete);
+    };
+  }, [socketRef, accessState, dispatch]);
 
   // ─── Save to localStorage on tab close (backup) ──────────────────────────────
   useEffect(() => {
