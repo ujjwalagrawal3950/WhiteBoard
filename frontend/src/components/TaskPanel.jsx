@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSocket } from '../context/SocketContext';
 import { useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
@@ -90,7 +90,7 @@ export default function TaskPanel({ isOpen, onClose, boardId }) {
   const completed = tasks.filter(t => t.completed);
 
   return (
-    <div className={	ask-panel }>
+    <div className={`task-panel ${isOpen ? 'task-panel-open' : ''}`}>
       <div className="task-panel-header">
         <div className="task-panel-title">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -181,8 +181,8 @@ export default function TaskPanel({ isOpen, onClose, boardId }) {
 
 function TaskItem({ task, isRemoving, isCompleting, isEditing, editValue, onEditValueChange, onToggle, onDelete, onStartEdit, onSaveEdit, onEditKeyDown }) {
   return (
-    <div className={	ask-item   }>
-      <button className={	ask-check } onClick={onToggle}>
+    <div className={`task-item ${task.completed ? 'task-item-done' : ''} ${isRemoving ? 'task-item-removing' : ''} ${isCompleting ? 'task-item-completing' : ''}`}>
+      <button className={`task-check ${task.completed ? 'task-check-done' : ''}`} onClick={onToggle}>
         {task.completed && (
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
             <polyline points="20 6 9 17 4 12"/>
