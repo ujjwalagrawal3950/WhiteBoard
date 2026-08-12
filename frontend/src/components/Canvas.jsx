@@ -398,8 +398,8 @@ export default function Canvas({ boardId }) {
     const socket = socketRef?.current;
     if (!socket) return;
     const onEl = (el) => dispatch(updateRemoteElement(el));
-    const onCursor = ({ userId: uid, x, y, userName: uName }) =>
-      setRemoteCursors(prev => ({ ...prev, [uid]: { x, y, name: uName } }));
+    const onCursor = ({ userId: uid, x, y, userName: uName, userAvatar: uAvatar }) =>
+      setRemoteCursors(prev => ({ ...prev, [uid]: { x, y, name: uName, avatar: uAvatar } }));
     socket.on('element-update', onEl);
     socket.on('cursor-moved', onCursor);
     return () => { socket.off('element-update', onEl); socket.off('cursor-moved', onCursor); };
@@ -413,7 +413,7 @@ export default function Canvas({ boardId }) {
 
   const emitCursor = useCallback(throttle((x, y) => {
     const s = socketRef?.current;
-    if (s && boardId && user) s.emit('cursor-move', { boardId, x, y, userName: user.name, userId: user.id });
+    if (s && boardId && user) s.emit('cursor-move', { boardId, x, y, userName: user.name, userId: user.id, userAvatar: user.avatar });
   }, 50), [socketRef, boardId, user]);
 
   // ─── Text commit ─────────────────────────────────────────────────
@@ -1045,11 +1045,15 @@ export default function Canvas({ boardId }) {
       })()}
 
       {/* Remote cursors */}
-      {Object.entries(remoteCursors).map(([uid, { x, y, name }]) => (
+      {Object.entries(remoteCursors).map(([uid, { x, y, name, avatar }]) => (
         <div key={uid} className="remote-cursor" style={{ left: x * camera.zoom + camera.x, top: y * camera.zoom + camera.y }}>
-          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-            <path d="M2 2l14 5-6 2-2 6L2 2z" fill="#7C3AED" stroke="white" strokeWidth="1"/>
-          </svg>
+          {avatar ? (
+            <img src={avatar} alt={name} className="remote-cursor-img" referrerPolicy="no-referrer" />
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#7C3AED" className="remote-cursor-fallback">
+              <circle cx="12" cy="12" r="10" />
+            </svg>
+          )}
           <span className="remote-cursor-label">{name}</span>
         </div>
       ))}

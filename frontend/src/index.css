@@ -727,6 +727,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 200;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   opacity: 0;
@@ -764,8 +765,6 @@ body {
   margin: 4px 0;
   flex-shrink: 0;
 }
-
-/* Removed old tool grid */
 
 /* ─── COLOR SWATCHES ────────────────────────────────── */
 .color-grid {
@@ -1031,6 +1030,22 @@ kbd {
   width: 100%;
   height: 100%;
   touch-action: none;
+}
+
+/* Inline Text Editor (replaces standard textarea styling) */
+.text-edit-input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  resize: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  line-height: normal !important;
+  caret-color: var(--text-1);
+  color: inherit;
+  font-family: inherit;
+  box-shadow: none !important;
 }
 
 /* Eraser glow overlay — stacked on top of main canvas, non-interactive */
@@ -1371,13 +1386,31 @@ kbd {
 /* Remote cursors */
 .remote-cursor {
   position: absolute;
-  pointer-events: none;
-  transform: translate(-2px, -2px);
+  pointer-events: auto; /* Allow hover */
+  transform: translate(-14px, -14px); /* Center image (28/2 = 14) */
   z-index: 200;
   display: flex;
   align-items: flex-start;
   gap: 4px;
 }
+
+.remote-cursor-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #7C3AED;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  background: var(--bg-surface);
+}
+
+.remote-cursor-fallback {
+  border-radius: 50%;
+  border: 2px solid #7C3AED;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
 .remote-cursor-label {
   background: #7C3AED;
   color: white;
@@ -1386,8 +1419,16 @@ kbd {
   padding: 2px 7px;
   border-radius: 10px;
   white-space: nowrap;
-  margin-top: 16px;
-  margin-left: -4px;
+  margin-top: 4px;
+  margin-left: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.remote-cursor:hover .remote-cursor-label {
+  opacity: 1;
+}
   box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
@@ -1840,6 +1881,7 @@ kbd {
   backdrop-filter: blur(24px);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5);
   animation: libSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

@@ -109,8 +109,8 @@ export function initSocket(io) {
     });
 
     // ─── PHASE 5: Live cursor movement ────────────────────────────────────────
-    socket.on('cursor-move', ({ boardId, x, y, userName, userId: cursorUserId }) => {
-      socket.to(boardId).emit('cursor-moved', { x, y, userName, userId: cursorUserId });
+    socket.on('cursor-move', ({ boardId, x, y, userName, userId: cursorUserId, userAvatar }) => {
+      socket.to(boardId).emit('cursor-moved', { x, y, userName, userId: cursorUserId, userAvatar });
     });
 
     // ─── Cleanup ──────────────────────────────────────────────────────────────
