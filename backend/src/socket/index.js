@@ -24,6 +24,7 @@ export function initSocket(io) {
   io.on('connection', (socket) => {
     const userId = socket.user.userId;
     userSocketMap.set(userId, socket.id);
+    console.log(`[socket] User connected: userId=${userId} socketId=${socket.id} mapSize=${userSocketMap.size}`);
 
     // ─── Join a board room ─────────────────────────────────────────────────────
     socket.on('join-board', ({ boardId }) => {
@@ -35,13 +36,18 @@ export function initSocket(io) {
       try {
         const board = await Board.findById(boardId);
         if (!board) return;
-        const ownerSocketId = userSocketMap.get(board.ownerId.toString());
+        const ownerIdStr = board.ownerId.toString();
+        const ownerSocketId = userSocketMap.get(ownerIdStr);
+        console.log(`[request-access] boardId=${boardId} guest=${guest?.name} ownerId=${ownerIdStr} ownerSocketId=${ownerSocketId} mapSize=${userSocketMap.size}`);
         if (ownerSocketId) {
           io.to(ownerSocketId).emit('access-requested', {
             boardId,
             guest,           // { id, name }
             guestSocketId: socket.id,
           });
+          console.log(`[request-access] Sent access-requested to owner socket ${ownerSocketId}`);
+        } else {
+          console.log(`[request-access] Owner NOT connected. Map keys: ${JSON.stringify([...userSocketMap.keys()])}`);
         }
       } catch (err) {
         console.error('request-access error:', err);

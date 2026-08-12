@@ -81,7 +81,10 @@ export default function WhiteboardPage() {
         // Sync cache with server data
         try { localStorage.setItem(localKey, JSON.stringify(data.elements)); } catch (_) {}
         setBoardTitle(data.title);
-        const ownerMatch = data.ownerId === user?.id || data.ownerId?.toString() === user?.id;
+        // Bulletproof string comparison — both sides must be strings
+        const ownerIdStr = String(data.ownerId ?? '');
+        const userIdStr  = String(user?.id ?? '');
+        const ownerMatch = ownerIdStr.length > 0 && userIdStr.length > 0 && ownerIdStr === userIdStr;
         isOwnerRef.current = ownerMatch;
         setIsOwner(ownerMatch);
         setAccessState('granted');
