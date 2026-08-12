@@ -27,7 +27,8 @@ router.get(
   (req, res) => {
     const payload = { userId: req.user._id.toString(), email: req.user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-    const isProd = process.env.NODE_ENV === 'production';
+    const primaryFrontend = getPrimaryFrontendUrl();
+    const isProd = process.env.NODE_ENV === 'production' || !primaryFrontend.includes('localhost');
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -36,7 +37,6 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    const primaryFrontend = getPrimaryFrontendUrl();
     res.redirect(`${primaryFrontend}/dashboard`);
   }
 );
@@ -55,7 +55,8 @@ router.get('/me', authenticateToken, async (req, res) => {
 
 // ─── Step 4: Logout ──────────────────────────────────────────────────────────
 router.post('/logout', (_req, res) => {
-  const isProd = process.env.NODE_ENV === 'production';
+  const primaryFrontend = getPrimaryFrontendUrl();
+  const isProd = process.env.NODE_ENV === 'production' || !primaryFrontend.includes('localhost');
   res.clearCookie('token', {
     httpOnly: true,
     secure: isProd,
