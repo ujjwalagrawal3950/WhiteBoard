@@ -2927,3 +2927,213 @@ kbd {
 .task-action-btn:hover { background: var(--bg-card-hover); border-color: var(--border); color: var(--text-1); }
 .task-delete-btn:hover { color: var(--danger); border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.08); }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (max-width: 768px)
+══════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Landing Page ────────────────────────────────── */
+  .landing-card {
+    width: 92vw;
+    padding: 32px 24px;
+    border-radius: var(--radius-lg);
+  }
+  .landing-headline { font-size: 1.5rem; }
+  .landing-sub { font-size: 0.88rem; }
+  .blob-1 { width: 300px; height: 300px; }
+  .blob-2 { width: 250px; height: 250px; }
+  .blob-3 { width: 180px; height: 180px; }
+
+  /* ── Dashboard ───────────────────────────────────── */
+  .dashboard-header { padding: 0 16px; height: 56px; }
+  .dashboard-main { padding: 24px 16px; }
+  .dashboard-hero { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .dashboard-title { font-size: 1.4rem; }
+  .user-name { display: none; }
+  .boards-grid,
+  .boards-loading { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+
+  /* ── Whiteboard Topbar ───────────────────────────── */
+  .wb-topbar { padding: 0 10px; height: 46px; gap: 6px; }
+  .wb-topbar .btn-ghost { padding: 5px 8px; font-size: 0.78rem; gap: 4px; }
+  .wb-topbar .btn-ghost svg { width: 13px; height: 13px; }
+  .wb-title { font-size: 0.82rem; max-width: 120px; }
+  .save-indicator { font-size: 0.72rem; }
+
+  /* ── Floating Toolbar ────────────────────────────── */
+  .top-toolbar {
+    top: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-md);
+    gap: 4px;
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+  }
+  .tool-row { gap: 3px; }
+  .tool-btn-tb { width: 34px; height: 34px; border-radius: 6px; }
+  .tool-icon { width: 16px; height: 16px; }
+  .toolbar-separator { height: 20px; margin: 0 3px; }
+
+  /* ── Side Panel ──────────────────────────────────── */
+  .side-panel {
+    top: auto;
+    bottom: 16px;
+    left: 10px;
+    width: 220px;
+    max-height: 50vh;
+    border-radius: var(--radius-md);
+  }
+  .sidebar-section { padding: 10px 12px 6px; }
+
+  /* ── Task Panel ──────────────────────────────────── */
+  .task-panel { width: 280px; right: -300px; }
+  .task-panel-open { right: 0; }
+
+  /* ── Share Dropdown ──────────────────────────────── */
+  .share-dropdown { width: 250px; padding: 12px; }
+
+  /* ── Approval Toast ─────────────────────────────── */
+  .approval-toast-container { right: 12px; bottom: 12px; max-width: 260px; }
+
+  /* ── Libraries Page ─────────────────────────────── */
+  .libs-page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .libs-search-box { width: 100%; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE (max-width: 480px)
+══════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* ── Landing Page ────────────────────────────────── */
+  .landing-card {
+    width: 96vw;
+    padding: 28px 18px;
+    border-radius: var(--radius-md);
+  }
+  .landing-headline { font-size: 1.3rem; }
+  .landing-logo-text { font-size: 1.15rem; }
+  .landing-sub { font-size: 0.82rem; margin-bottom: 18px; }
+  .landing-features { gap: 6px; margin-bottom: 20px; }
+  .feature-chip { font-size: 0.72rem; padding: 3px 10px; }
+  .btn-start-drawing { padding: 13px 16px; font-size: 0.92rem; }
+  .google-btn { padding: 12px 16px; font-size: 0.88rem; }
+  .google-btn-secondary { padding: 10px 16px !important; font-size: 0.82rem !important; }
+
+  /* ── Dashboard ───────────────────────────────────── */
+  .dashboard-header { padding: 0 12px; height: 52px; }
+  .dashboard-brand-name { font-size: 0.95rem; }
+  .dashboard-main { padding: 18px 12px; }
+  .dashboard-title { font-size: 1.2rem; }
+  .dashboard-subtitle { font-size: 0.82rem; }
+  .btn-primary { padding: 8px 16px; font-size: 0.82rem; }
+  .boards-grid,
+  .boards-loading { grid-template-columns: 1fr; gap: 12px; }
+  .board-card-preview { height: 130px; }
+
+  /* ── Whiteboard Topbar ───────────────────────────── */
+  .wb-topbar { padding: 0 8px; height: 42px; gap: 4px; }
+  .wb-topbar .btn-ghost { padding: 4px 6px; font-size: 0px; gap: 0; }
+  .wb-topbar .btn-ghost svg { width: 15px; height: 15px; }
+  .wb-title { font-size: 0.78rem; max-width: 80px; }
+  .wb-back { padding: 4px !important; }
+  #wb-back-btn svg { width: 14px; height: 14px; }
+  .save-indicator { font-size: 0.68rem; display: none; }
+
+  /* ── Floating Toolbar — scrollable on small screens ─ */
+  .top-toolbar {
+    top: 6px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    border-radius: var(--radius-sm);
+    padding: 5px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .top-toolbar::-webkit-scrollbar { display: none; }
+  .tool-row { gap: 2px; flex-wrap: nowrap; }
+  .tool-btn-tb { width: 32px; height: 32px; flex-shrink: 0; }
+  .tool-icon { width: 15px; height: 15px; }
+  .toolbar-separator { height: 18px; margin: 0 2px; }
+
+  /* ── Side Panel — fullscreen on mobile ───────────── */
+  .side-panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 55vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(20px);
+  }
+  .side-panel-visible { transform: translateY(0); }
+
+  /* ── Task Panel — full width on mobile ──────────── */
+  .task-panel {
+    width: 100%;
+    right: -100%;
+  }
+  .task-panel-open { right: 0; }
+
+  /* ── Share Dropdown ──────────────────────────────── */
+  .share-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+
+  /* ── Context Menu ───────────────────────────────── */
+  .context-toolbar { padding: 3px 6px; }
+
+  /* ── Approval Toast ─────────────────────────────── */
+  .approval-toast-container {
+    right: 8px;
+    left: 8px;
+    bottom: 8px;
+    max-width: none;
+  }
+  .approval-toast { padding: 12px 14px; }
+
+  /* ── Waiting Room ───────────────────────────────── */
+  .waiting-room-card { padding: 28px 20px; width: 90vw; }
+
+  /* ── Login Modal ────────────────────────────────── */
+  .login-modal-card { width: 90vw; padding: 28px 20px; }
+
+  /* ── Libraries Page ─────────────────────────────── */
+  .libs-page-grid { grid-template-columns: 1fr !important; }
+  .libs-page-hero h1 { font-size: 1.3rem; }
+
+  /* ── Board card info ────────────────────────────── */
+  .board-card-info { padding: 12px 14px; }
+  .board-card-title { font-size: 0.88rem; }
+  .board-card-date { font-size: 0.72rem; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — VERY SMALL DEVICES (max-width: 360px)
+══════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .landing-card { padding: 22px 14px; }
+  .landing-headline { font-size: 1.15rem; }
+  .landing-logo svg { width: 32px; height: 32px; }
+  .landing-logo-text { font-size: 1rem; }
+  .dashboard-title { font-size: 1.05rem; }
+  .btn-primary { padding: 7px 12px; font-size: 0.78rem; }
+  .wb-title { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — LARGE SCREENS (min-width: 1400px)
+══════════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 1400px) {
+  .dashboard-main { padding: 48px 64px; }
+  .boards-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .board-card-preview { height: 180px; }
+}
+
