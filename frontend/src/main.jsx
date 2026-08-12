@@ -9,8 +9,9 @@ import axios from 'axios';
 import App from './App.jsx';
 import './index.css';
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-axios.defaults.baseURL = backendUrl.replace(/\/+$/, '');
+import { getBackendUrl } from './utils/config';
+
+axios.defaults.baseURL = getBackendUrl();
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById('root')).render(

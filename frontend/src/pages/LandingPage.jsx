@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchCurrentUser } from '../store/authSlice';
+import { getBackendUrl } from '../utils/config';
 
 export default function LandingPage() {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ export default function LandingPage() {
   };
 
   const handleGoogleLogin = () => {
-    const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000').replace(/\/+$/, '');
+    const backendUrl = getBackendUrl();
     window.location.href = `${backendUrl}/api/auth/google`;
   };
 

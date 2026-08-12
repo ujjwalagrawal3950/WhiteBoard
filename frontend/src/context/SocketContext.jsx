@@ -1,6 +1,7 @@
 import { createContext, useContext, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useSelector } from 'react-redux';
+import { getBackendUrl } from '../utils/config';
 
 const SocketContext = createContext(null);
 
@@ -11,7 +12,7 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     // TEST: socket connection auth check temporarily bypassed
     if (!socketRef.current) {
-      const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000').replace(/\/+$/, '');
+      const backendUrl = getBackendUrl();
       socketRef.current = io(backendUrl, {
         withCredentials: true,
         transports: ['polling', 'websocket'],

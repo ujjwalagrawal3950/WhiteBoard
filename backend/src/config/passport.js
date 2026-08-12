@@ -3,12 +3,13 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/User.js';
 
 export default function configurePassport() {
-  const isProd = process.env.NODE_ENV === 'production';
-  const callbackURL = process.env.BACKEND_URL 
-    ? `${process.env.BACKEND_URL.replace(/\/+$/, '')}/api/auth/google/callback`
-    : isProd 
-      ? 'https://whiteboard-backend-3wzu.onrender.com/api/auth/google/callback'
-      : '/api/auth/google/callback';
+  const backendBase = process.env.BACKEND_URL
+    ? process.env.BACKEND_URL.replace(/\/+$/, '')
+    : (process.env.NODE_ENV === 'production'
+        ? 'https://whiteboard-backend-3wzu.onrender.com'
+        : 'http://localhost:5000');
+
+  const callbackURL = `${backendBase}/api/auth/google/callback`;
 
   passport.use(
     new GoogleStrategy(
