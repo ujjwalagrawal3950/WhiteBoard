@@ -37,7 +37,7 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.redirect(`${primaryFrontend}/dashboard`);
+    res.redirect(`${primaryFrontend}/dashboard?token=${token}`);
   }
 );
 

@@ -9,15 +9,12 @@ export function initSocket(io) {
   // ─── JWT auth middleware on socket connection ────────────────────────────────
   io.use((socket, next) => {
     try {
-      // TEST: bypass backend socket authentication for guest testing
-      // const rawCookie = socket.handshake.headers.cookie || '';
-      // const cookies = cookie.parse(rawCookie);
-      // const token = cookies.token;
-      // if (!token) return next(new Error('Authentication error'));
-      // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // socket.user = decoded; // { userId, email }
-      
-      socket.user = { userId: 'guest-' + Math.random().toString(36).substr(2, 9) };
+      const token = socket.handshake.auth?.token;
+      if (!token) {
+        return next(new Error('Authentication error'));
+      }
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.user = decoded; // { userId, email }
       next();
     } catch {
       next(new Error('Authentication error'));

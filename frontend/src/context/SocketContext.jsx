@@ -13,8 +13,10 @@ export function SocketProvider({ children }) {
     // TEST: socket connection auth check temporarily bypassed
     if (!socketRef.current) {
       const backendUrl = getBackendUrl();
+      const token = localStorage.getItem('whiteboard_token');
       socketRef.current = io(backendUrl, {
         withCredentials: true,
+        auth: { token },
         transports: ['polling', 'websocket'],
         reconnection: true,
         reconnectionAttempts: 10,

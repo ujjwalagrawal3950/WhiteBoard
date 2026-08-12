@@ -15,6 +15,7 @@ export const fetchCurrentUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
   await axios.post('/api/auth/logout', {}, { withCredentials: true });
+  localStorage.removeItem('whiteboard_token');
 });
 
 const authSlice = createSlice({
