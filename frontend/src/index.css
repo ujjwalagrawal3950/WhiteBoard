@@ -2962,7 +2962,7 @@ kbd {
 
   /* ── Floating Toolbar ────────────────────────────── */
   .top-toolbar {
-    top: 8px;
+    top: 54px;
     padding: 6px 8px;
     border-radius: var(--radius-md);
     gap: 4px;
@@ -3042,7 +3042,7 @@ kbd {
 
   /* ── Floating Toolbar — scrollable on small screens ─ */
   .top-toolbar {
-    top: 6px;
+    top: 50px;
     left: 8px;
     right: 8px;
     transform: none;
@@ -3056,6 +3056,12 @@ kbd {
   .tool-btn-tb { width: 32px; height: 32px; flex-shrink: 0; }
   .tool-icon { width: 15px; height: 15px; }
   .toolbar-separator { height: 18px; margin: 0 2px; }
+
+  /* ── Library Sidebar — full width on mobile ──────── */
+  .library-sidebar {
+    width: 100%;
+    right: 0;
+  }
 
   /* ── Side Panel — fullscreen on mobile ───────────── */
   .side-panel {
