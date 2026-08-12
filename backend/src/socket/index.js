@@ -96,6 +96,12 @@ export function initSocket(io) {
       socket.to(boardId).emit('comment-delete', { commentId });
     });
 
+    // ─── Tasks sync ───────────────────────────────────────────────────────────
+    socket.on('task-update', ({ boardId, tasks }) => {
+      // Broadcast to everyone in the room EXCEPT the sender
+      socket.to(boardId).emit('task-sync', { tasks });
+    });
+
     // ─── PHASE 5: Live cursor movement ────────────────────────────────────────
     socket.on('cursor-move', ({ boardId, x, y, userName, userId: cursorUserId }) => {
       socket.to(boardId).emit('cursor-moved', { x, y, userName, userId: cursorUserId });

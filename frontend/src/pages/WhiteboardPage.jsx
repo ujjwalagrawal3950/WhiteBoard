@@ -10,6 +10,7 @@ import WaitingRoom from '../components/WaitingRoom';
 import ApprovalToast from '../components/ApprovalToast';
 import LoginModal from '../components/LoginModal';
 import LibrarySidebar from '../components/LibrarySidebar';
+import TaskPanel from '../components/TaskPanel';
 
 // ─── Save indicator states ────────────────────────────────────────────────────
 const SAVE_STATES = { idle: 'idle', unsaved: 'unsaved', saving: 'saving', saved: 'saved' };
@@ -48,6 +49,15 @@ export default function WhiteboardPage() {
   const [loginModal, setLoginModal] = useState(null); // null | 'share' | 'download'
   
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [isTaskPanelOpen, setIsTaskPanelOpen] = useState(false);
+
+  // Share dropdown state
+  const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
+  const [copyState, setCopyState] = useState('idle'); // 'idle' | 'copied'
+  const shareDropdownRef = useRef(null);
+
+  // Owner state
+  const [isOwner, setIsOwner] = useState(false);
 
   // localStorage key for this board (backup layer)
   const localKey = `sketchsync_board_${boardId}`;
@@ -71,7 +81,9 @@ export default function WhiteboardPage() {
         // Sync cache with server data
         try { localStorage.setItem(localKey, JSON.stringify(data.elements)); } catch (_) {}
         setBoardTitle(data.title);
-        isOwnerRef.current = data.ownerId === user?.id || data.ownerId?.toString() === user?.id;
+        const ownerMatch = data.ownerId === user?.id || data.ownerId?.toString() === user?.id;
+        isOwnerRef.current = ownerMatch;
+        setIsOwner(ownerMatch);
         setAccessState('granted');
 
         // Join socket room
@@ -150,6 +162,27 @@ export default function WhiteboardPage() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [dispatch]);
+
+  // ─── Close share dropdown on outside click ──────────────────────────────────
+  useEffect(() => {
+    const handler = (e) => {
+      if (shareDropdownRef.current && !shareDropdownRef.current.contains(e.target)) {
+        setShareDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // ─── Copy link handler ───────────────────────────────────────────────────────
+  const handleCopyLink = useCallback(() => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopyState('copied');
+    setTimeout(() => {
+      setCopyState('idle');
+      setShareDropdownOpen(false);
+    }, 1800);
+  }, []);
 
   // ─── Access granted callback (from WaitingRoom) ──────────────────────────────
   const handleAccessGranted = useCallback(({ boardElements, boardTitle: title, comments }) => {
@@ -246,22 +279,68 @@ export default function WhiteboardPage() {
             Export
           </button>
 
-          {/* Share button */}
+          {/* Task panel button */}
           <button
-            id="share-link-btn"
-            className="btn-ghost"
-            title={user ? 'Copy share link' : 'Sign in to share'}
-            onClick={() => {
-              if (!user) { setLoginModal('share'); return; }
-              navigator.clipboard.writeText(window.location.href);
-            }}
+            id="task-panel-btn"
+            className={`btn-ghost ${isTaskPanelOpen ? 'btn-ghost-active' : ''}`}
+            title="Tasks"
+            onClick={() => setIsTaskPanelOpen(o => !o)}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              <rect x="3" y="5" width="6" height="6" rx="1"/>
+              <path d="M3 17h6"/><path d="M12 7h9"/><path d="M12 12h9"/><path d="M12 17h9"/>
+              <polyline points="7 8 8 9 10 7"/>
             </svg>
-            Share
+            Tasks
           </button>
+
+          {/* Share dropdown */}
+          <div className="share-dropdown-wrapper" ref={shareDropdownRef}>
+            <button
+              id="share-link-btn"
+              className={`btn-ghost ${shareDropdownOpen ? 'btn-ghost-active' : ''}`}
+              title={user ? 'Share board' : 'Sign in to share'}
+              onClick={() => {
+                if (!user) { setLoginModal('share'); return; }
+                setShareDropdownOpen(o => !o);
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+              </svg>
+              Share
+            </button>
+
+            {shareDropdownOpen && (
+              <div className="share-dropdown">
+                <div className="share-dropdown-header">Share this board</div>
+                <div className="share-dropdown-url">{window.location.href}</div>
+                <button
+                  id="copy-link-btn"
+                  className={`share-copy-btn ${copyState === 'copied' ? 'share-copy-btn-copied' : ''}`}
+                  onClick={handleCopyLink}
+                >
+                  {copyState === 'copied' ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                      </svg>
+                      Copy Link
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* User avatar */}
           {user?.avatar && (
@@ -276,8 +355,11 @@ export default function WhiteboardPage() {
         {/* Library Sidebar */}
         <LibrarySidebar isOpen={isLibraryOpen} onClose={() => setIsLibraryOpen(false)} />
 
+        {/* Task panel */}
+        <TaskPanel isOpen={isTaskPanelOpen} onClose={() => setIsTaskPanelOpen(false)} boardId={boardId} />
+
         {/* Host approval toasts (visible only to owner) */}
-        {isOwnerRef.current && <ApprovalToast boardId={boardId} />}
+        {isOwner && <ApprovalToast boardId={boardId} />}
 
         {/* Login modal — triggered by Share / Download for guests */}
         {loginModal && (
