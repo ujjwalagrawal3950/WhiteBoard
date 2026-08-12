@@ -20,11 +20,45 @@ const app = express();
 app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
-// ─── CORS ──────────────────────────────────────────────────────────────────────
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
+// ─── CORS Configuration ────────────────────────────────────────────────────────
+const allowedOrigins = [
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map((u) => u.trim().replace(/\/+$/, ''))
+    : []),
+  'https://white-board-lac.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean);
+
+const isOriginAllowed = (origin) => {
+  if (!origin) return true; // Allow non-browser requests (curl, postman, server-to-server)
+  const normalizedOrigin = origin.replace(/\/+$/, '');
+  if (allowedOrigins.includes(normalizedOrigin)) return true;
+  try {
+    const hostname = new URL(origin).hostname;
+    if (hostname.endsWith('.vercel.app')) return true;
+  } catch (_e) {
+    // Ignore URL parse error
+  }
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS] Blocked origin: ${origin}`);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    }
+  },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 // ─── Body / Cookie parsing ─────────────────────────────────────────────────────
 app.use(express.json());
@@ -42,9 +76,18 @@ app.use('/api/libraries', librariesRouter);
 // ─── Socket.io ────────────────────────────────────────────────────────────────
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Socket CORS blocked origin: ${origin}`));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST'],
   },
+  transports: ['polling', 'websocket'],
+  allowEIO3: true,
 });
 initSocket(io);
 

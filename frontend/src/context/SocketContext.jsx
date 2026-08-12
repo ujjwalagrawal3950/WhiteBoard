@@ -14,7 +14,10 @@ export function SocketProvider({ children }) {
       const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000').replace(/\/+$/, '');
       socketRef.current = io(backendUrl, {
         withCredentials: true,
-        transports: ['websocket'],
+        transports: ['polling', 'websocket'],
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
       });
 
       socketRef.current.on('connect', () => {

@@ -6,6 +6,11 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const getPrimaryFrontendUrl = () => {
+  const urlStr = process.env.FRONTEND_URL || 'https://white-board-lac.vercel.app';
+  return urlStr.split(',')[0].trim().replace(/\/+$/, '');
+};
+
 // ─── Step 1: Redirect to Google ───────────────────────────────────────────────
 router.get(
   '/google',
@@ -15,19 +20,24 @@ router.get(
 // ─── Step 2: Google callback ──────────────────────────────────────────────────
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND_URL}/?error=auth`, session: false }),
+  (req, res, next) => {
+    const primaryFrontend = getPrimaryFrontendUrl();
+    passport.authenticate('google', { failureRedirect: `${primaryFrontend}/?error=auth`, session: false })(req, res, next);
+  },
   (req, res) => {
     const payload = { userId: req.user._id.toString(), email: req.user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const isProd = process.env.NODE_ENV === 'production';
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    const primaryFrontend = getPrimaryFrontendUrl();
+    res.redirect(`${primaryFrontend}/dashboard`);
   }
 );
 
@@ -45,7 +55,12 @@ router.get('/me', authenticateToken, async (req, res) => {
 
 // ─── Step 4: Logout ──────────────────────────────────────────────────────────
 router.post('/logout', (_req, res) => {
-  res.clearCookie('token');
+  const isProd = process.env.NODE_ENV === 'production';
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+  });
   res.json({ message: 'Logged out' });
 });
 
