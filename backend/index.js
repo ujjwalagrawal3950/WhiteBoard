@@ -69,6 +69,7 @@ configurePassport();
 app.use(passport.initialize());
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
+app.get('/', (req, res) => res.send('Whiteboard Backend is running!'));
 app.use('/api/auth', authRouter);
 app.use('/api/boards', boardsRouter);
 app.use('/api/libraries', librariesRouter);
