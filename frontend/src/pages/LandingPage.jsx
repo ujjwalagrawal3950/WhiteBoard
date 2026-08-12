@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchCurrentUser } from '../store/authSlice';
 import { getBackendUrl } from '../utils/config';
 
 export default function LandingPage() {
@@ -9,10 +8,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  // Silently check if user is already logged in
-  useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, [dispatch]);
+  // (fetchCurrentUser is now handled globally in App.jsx)
 
   // If already logged in, go straight to dashboard
   useEffect(() => {
