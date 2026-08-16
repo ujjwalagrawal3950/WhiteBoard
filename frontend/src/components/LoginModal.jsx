@@ -21,7 +21,7 @@ export default function LoginModal({ trigger, onClose }) {
     // After OAuth, Google redirects back to the server which sets the cookie
     // then redirects to /dashboard. We store the current board URL so we can
     // redirect back after login.
-    sessionStorage.setItem('redirect_after_login', window.location.pathname);
+    sessionStorage.setItem('redirect_after_login', window.location.pathname + window.location.search);
     const backendUrl = getBackendUrl();
     window.location.href = `${backendUrl}/api/auth/google`;
   };

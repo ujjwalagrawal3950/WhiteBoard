@@ -1429,8 +1429,6 @@ kbd {
 .remote-cursor:hover .remote-cursor-label {
   opacity: 1;
 }
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
 
 /* ─── WaitingRoom ─────────────────────────────────────────────────────────── */
 .waiting-room-overlay {

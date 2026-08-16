@@ -116,24 +116,21 @@ export default function GuestCanvasPage() {
 
   // ─── Share handler ────────────────────────────────────────────────────────────
   const handleShare = () => {
-    // TEST: auth gate bypassed — restore when done testing
-    // if (!isAuthenticated) { setLoginModal('share'); } else { navigator.clipboard.writeText(window.location.href); }
-    navigator.clipboard.writeText(window.location.href);
+    if (!isAuthenticated) {
+      setLoginModal('share');
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+    }
   };
 
   // ─── Download handler ─────────────────────────────────────────────────────────
   const handleDownload = () => {
-    // TEST: auth gate bypassed — restore when done testing
-    // if (!isAuthenticated) {
-    //   setLoginModal('download');
-    // } else {
     const canvas = document.getElementById('main-canvas');
     if (!canvas) return;
     const link = document.createElement('a');
     link.download = 'sketchsync-board.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
-    // }
   };
 
   return (
